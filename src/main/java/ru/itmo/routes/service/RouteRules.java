@@ -13,7 +13,6 @@ public class RouteRules {
     @PersistenceContext(unitName = "routesPU") private EntityManager em;
     @Inject private Validator validator;
 
-    // Один transaction-level lock для всех путей записи, включая импорт и SQL-функции.
     public void lock() {
         em.createNativeQuery("select 1 from pg_advisory_xact_lock(12014548)").getSingleResult();
     }

@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-// Каждый JMeter-поток использует собственные cookie и BASIC-учётную запись.
 class WebUser {
     String base, auth, page
     def http = HttpClient.newBuilder().cookieHandler(new CookieManager())
@@ -203,7 +202,6 @@ try {
     }
     exactlyOne('cross', saved)
 
-    // Изолируем rollback-проверки от параллельного добавления локаций другим потоком.
     stage = 'rollback'
     for (int turn = 0; turn < 2; turn++) {
         if (worker == turn) {
