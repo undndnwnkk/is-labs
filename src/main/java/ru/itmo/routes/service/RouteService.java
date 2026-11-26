@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Stateless
 public class RouteService {
+    @Inject private RouteRules rules;
     @Inject private RouteRepository repository;
     @Inject private LocationRepository locations;
     @Inject private Event<RouteChanged> changes;
@@ -27,6 +28,8 @@ public class RouteService {
     public List<RouteDto> all() { return RouteMapper.toRouteDtos(repository.findAll()); }
 
     public RouteDto create(RouteForm form) {
+        rules.lock();
+        rules.validate(form, null);
         Route route = new Route();
         RouteMapper.copy(form, route);
         bindLocations(route, form);
@@ -36,7 +39,10 @@ public class RouteService {
     }
 
     public RouteDto update(Integer id, RouteForm form) {
-        Route stored = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Маршрут не найден"));
+        rules.lock();
+        Route stored = repository.findById(id).orElseThrow(() -> new BusinessException("Маршрут уже удалён"));
+        rules.checkVersion(stored, form.getVersion());
+        rules.validate(form, id);
         RouteMapper.copy(form, stored);
         bindLocations(stored, form);
         Route updated = repository.update(stored);
@@ -44,13 +50,17 @@ public class RouteService {
         return RouteMapper.toDto(updated);
     }
 
-    public void delete(Integer id, Integer replacementId) {
+    public void delete(Integer id, Integer replacementId, Long version) {
+        rules.lock();
+        Route stored = repository.findById(id).orElseThrow(() -> new BusinessException("Маршрут уже удалён"));
+        rules.checkVersion(stored, version);
         if (id != null && id.equals(replacementId)) throw new IllegalArgumentException("Замена должна отличаться от удаляемого маршрута");
         repository.deleteWithReplacement(id, replacementId);
         changes.fire(new RouteChanged("deleted", id));
     }
 
     public Integer deleteOneByRating(int rating) {
+        rules.lock();
         Integer id = repository.deleteOneByRating(rating);
         if (id != null) changes.fire(new RouteChanged("deleted", id));
         return id;
@@ -62,6 +72,16 @@ public class RouteService {
     }
 
     public Integer addBetween(String name, double cx, long cy, Integer from, Integer to, float distance, int rating) {
+        rules.lock();
+        RouteForm form = new RouteForm();
+        form.setName(name);
+        form.setCoordinateX(cx);
+        form.setCoordinateY(cy);
+        form.setFromId(from);
+        form.setToId(to);
+        form.setDistance(distance);
+        form.setRating(rating);
+        rules.validate(form, null);
         Integer id = repository.addBetween(name.trim(), cx, cy, from, to, distance, rating);
         changes.fire(new RouteChanged("created", id));
         return id;
