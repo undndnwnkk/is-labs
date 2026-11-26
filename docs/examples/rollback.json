@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Rollback: это не должно сохраниться",
+    "coordinates": {"x": 900.1, "y": 900},
+    "from": {"x": 1, "y": 2, "z": 3},
+    "distance": 2,
+    "rating": 1
+  },
+  {
+    "name": "Rollback: это не должно сохраниться",
+    "coordinates": {"x": 900.2, "y": 901},
+    "from": {"x": 4, "y": 5, "z": 6},
+    "distance": 3,
+    "rating": 2
+  }
+]
