@@ -32,6 +32,7 @@ public class RouteListBean implements Serializable {
     private boolean deleteOpen;
     private Integer editingId;
     private Integer deleteId;
+    private Long deleteVersion;
     private Integer replacementId;
     private RouteForm draft;
 
@@ -88,6 +89,7 @@ public class RouteListBean implements Serializable {
     }
 
     public void askDelete(Integer id) {
+        deleteVersion = service.find(id).orElseThrow(() -> new IllegalArgumentException("Маршрут уже удалён")).getVersion();
         deleteId = id;
         replacementId = null;
         deleteOpen = true;
@@ -95,7 +97,7 @@ public class RouteListBean implements Serializable {
 
     public void delete() {
         try {
-            service.delete(deleteId, replacementId);
+            service.delete(deleteId, replacementId, deleteVersion);
             deleteOpen = false;
             allRoutes = service.all();
             reload();

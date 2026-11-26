@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Stateless
 public class LocationService {
+    @Inject private RouteRules rules;
     @Inject private LocationRepository repository;
     @Inject private Event<LocationChanged> changes;
 
@@ -31,6 +32,7 @@ public class LocationService {
     public long routeCount(Integer id) { return repository.routeCount(id); }
 
     public LocationDto create(LocationForm form) {
+        rules.lock();
         Location location = new Location();
         RouteMapper.copy(form, location);
         Location saved = repository.save(location);
@@ -39,6 +41,7 @@ public class LocationService {
     }
 
     public LocationDto update(Integer id, LocationForm form) {
+        rules.lock();
         Location stored = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Локация не найдена"));
         RouteMapper.copy(form, stored);
         changes.fire(new LocationChanged("updated", id));
@@ -46,6 +49,7 @@ public class LocationService {
     }
 
     public int delete(Integer id, Integer replacementId) {
+        rules.lock();
         if (id != null && id.equals(replacementId)) throw new IllegalArgumentException("Локация не может заменять сама себя");
         int moved = repository.deleteWithReplacement(id, replacementId);
         changes.fire(new LocationChanged("deleted", id));
