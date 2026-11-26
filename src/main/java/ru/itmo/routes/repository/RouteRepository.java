@@ -50,7 +50,7 @@ public class RouteRepository {
     }
 
     public Route save(Route route) { em.persist(route); return route; }
-    public Route update(Route route) { return em.merge(route); }
+    public Route update(Route route) { em.flush(); return route; }
 
     public void deleteWithReplacement(Integer routeId, Integer replacementId) {
         em.createNativeQuery("select delete_route_with_replacement(?1, ?2)")

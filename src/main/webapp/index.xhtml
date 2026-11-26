@@ -9,7 +9,7 @@
         <h:form id="routesForm">
             <div class="page-heading">
                 <div><h1>Маршруты</h1><p>Управление маршрутами и связанными локациями</p></div>
-                <h:commandButton value="＋  Новый маршрут" action="#{routeListBean.openCreate}" styleClass="button primary">
+                <h:commandButton id="create" value="＋  Новый маршрут" action="#{routeListBean.openCreate}" styleClass="button primary">
                     <f:ajax execute="@this" render=":routesForm:modalArea"/>
                 </h:commandButton>
             </div>
@@ -28,7 +28,7 @@
             </div>
 
             <h:panelGroup id="tablePanel" layout="block" styleClass="table-frame">
-                <h:dataTable value="#{routeListBean.routes}" var="route" styleClass="data-table"
+                <h:dataTable id="routesTable" value="#{routeListBean.routes}" var="route" styleClass="data-table"
                              headerClass="table-header" rowClasses="table-row">
                     <h:column><f:facet name="header"><h:commandLink value="ID" action="#{routeListBean.sortBy('id')}" styleClass="sort-link"><f:ajax render=":routesForm:tablePanel"/></h:commandLink></f:facet><span class="id-cell">##{route.id}</span></h:column>
                     <h:column><f:facet name="header"><h:commandLink value="Название" action="#{routeListBean.sortBy('name')}" styleClass="sort-link"><f:ajax render=":routesForm:tablePanel"/></h:commandLink></f:facet><h:link outcome="/route-view" value="#{route.name}" styleClass="name-link"><f:param name="id" value="#{route.id}"/></h:link></h:column>
@@ -42,8 +42,8 @@
                         <f:facet name="header">Действия</f:facet>
                         <div class="row-actions">
                             <h:link outcome="/route-view" value="Открыть" styleClass="action-link"><f:param name="id" value="#{route.id}"/></h:link>
-                            <h:commandLink value="Изменить" action="#{routeListBean.openEdit(route.id)}" styleClass="action-link"><f:ajax execute="@this" render=":routesForm:modalArea"/></h:commandLink>
-                            <h:commandLink value="Удалить" action="#{routeListBean.askDelete(route.id)}" styleClass="action-link danger"><f:ajax execute="@this" render=":routesForm:modalArea"/></h:commandLink>
+                            <h:commandLink id="edit" value="Изменить" action="#{routeListBean.openEdit(route.id)}" styleClass="action-link"><f:ajax execute="@this" render=":routesForm:modalArea"/></h:commandLink>
+                            <h:commandLink id="askDelete" value="Удалить" action="#{routeListBean.askDelete(route.id)}" styleClass="action-link danger"><f:ajax execute="@this" render=":routesForm:modalArea"/></h:commandLink>
                         </div>
                     </h:column>
                 </h:dataTable>
@@ -93,7 +93,7 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <footer class="modal-footer"><h:commandButton value="Отмена" action="#{routeListBean.closeEditor}" immediate="true" styleClass="button secondary"><f:ajax render=":routesForm:modalArea"/></h:commandButton><h:commandButton value="#{routeListBean.editingId == null ? 'Создать маршрут' : 'Сохранить изменения'}" action="#{routeListBean.save}" styleClass="button primary"><f:ajax execute="@form" render="@form"/></h:commandButton></footer>
+                        <footer class="modal-footer"><h:commandButton value="Отмена" action="#{routeListBean.closeEditor}" immediate="true" styleClass="button secondary"><f:ajax render=":routesForm:modalArea"/></h:commandButton><h:commandButton id="save" value="#{routeListBean.editingId == null ? 'Создать маршрут' : 'Сохранить изменения'}" action="#{routeListBean.save}" styleClass="button primary"><f:ajax execute="@form" render="@form"/></h:commandButton></footer>
                     </section>
                 </div></ui:fragment>
 
@@ -101,7 +101,7 @@
                     <section class="modal confirm-modal">
                         <header class="modal-header"><div><span class="modal-kicker danger-text">Необратимое действие</span><h2>Удалить маршрут ##{routeListBean.deleteId}?</h2></div></header>
                         <div class="modal-body"><p>Связи с удаляемым маршрутом можно перенести на другой объект.</p><label for="replacement">Маршрут-замена</label><h:selectOneMenu id="replacement" value="#{routeListBean.replacementId}"><f:selectItem itemValue="#{null}" itemLabel="Без замены (если нет связей)"/><f:selectItems value="#{routeListBean.allRoutes}" var="candidate" itemValue="#{candidate.id}" itemLabel="#{candidate.name}" itemDisabled="#{candidate.id eq routeListBean.deleteId}"/></h:selectOneMenu></div>
-                        <footer class="modal-footer"><h:commandButton value="Отмена" action="#{routeListBean.closeDelete}" styleClass="button secondary"><f:ajax render=":routesForm:modalArea"/></h:commandButton><h:commandButton value="Удалить" action="#{routeListBean.delete}" styleClass="button danger-button"><f:ajax execute="@form" render="@form"/></h:commandButton></footer>
+                        <footer class="modal-footer"><h:commandButton value="Отмена" action="#{routeListBean.closeDelete}" styleClass="button secondary"><f:ajax render=":routesForm:modalArea"/></h:commandButton><h:commandButton id="delete" value="Удалить" action="#{routeListBean.delete}" styleClass="button danger-button"><f:ajax execute="@form" render="@form"/></h:commandButton></footer>
                     </section>
                 </div></ui:fragment>
             </h:panelGroup>

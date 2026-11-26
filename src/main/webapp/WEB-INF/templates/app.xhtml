@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets">
+<ui:insert name="metadata"/>
 <h:head>
-    <ui:insert name="metadata"/>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title><ui:insert name="title">Маршруты</ui:insert> · ИС</title>
@@ -26,13 +26,16 @@
                 <h:link outcome="/special" styleClass="nav-link #{view.viewId eq '/special.xhtml' ? 'active' : ''}">
                     <span class="nav-icon">⌘</span><span>Спецоперации</span>
                 </h:link>
+                <h:link outcome="/import" styleClass="nav-link #{view.viewId eq '/import.xhtml' ? 'active' : ''}">
+                    <span class="nav-icon">↓</span><span>Импорт и история</span>
+                </h:link>
             </nav>
             <p class="sidebar-note">Java EE · Hibernate<br/>PostgreSQL</p>
         </aside>
         <main class="main-content">
             <header class="topbar">
                 <div><span class="live-dot"></span> Данные синхронизируются</div>
-                <span>Учебная система</span>
+                <span><h:outputText value="#{request.remoteUser}"/></span>
             </header>
             <section class="page">
                 <ui:insert name="content"/>
