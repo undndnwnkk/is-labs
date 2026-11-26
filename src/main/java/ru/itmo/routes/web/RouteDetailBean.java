@@ -40,10 +40,17 @@ public class RouteDetailBean implements Serializable {
     }
 
     public void save() {
-        route = service.update(id, draft);
-        editorOpen = false;
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Изменения сохранены", null));
+        try {
+            route = service.update(id, draft);
+            editorOpen = false;
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Изменения сохранены", null));
+        } catch (RuntimeException exception) {
+            Throwable cause = exception;
+            while (cause.getCause() != null) cause = cause.getCause();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, cause.getMessage(), null));
+        }
     }
 
     public void closeEditor() { editorOpen = false; }

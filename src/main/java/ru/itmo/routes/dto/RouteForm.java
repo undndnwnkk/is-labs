@@ -4,9 +4,13 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
 public class RouteForm implements Serializable {
+    private Long version;
+
+    @Size(max = 255, message = "Название маршрута не длиннее 255 символов")
     @NotBlank(message = "Название обязательно")
     private String name;
 
@@ -30,6 +34,7 @@ public class RouteForm implements Serializable {
 
     public static RouteForm of(RouteDto route) {
         RouteForm form = new RouteForm();
+        form.version = route.getVersion();
         form.name = route.getName();
         form.coordinateX = route.getCoordinates().getX();
         form.coordinateY = route.getCoordinates().getY();
@@ -40,6 +45,8 @@ public class RouteForm implements Serializable {
         return form;
     }
 
+    public Long getVersion() { return version; }
+    public void setVersion(Long version) { this.version = version; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public Double getCoordinateX() { return coordinateX; }

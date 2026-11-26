@@ -45,9 +45,16 @@ public class SpecialOperationsBean implements Serializable {
     public void showLessThan() { results = service.ratingLessThan(rating); }
     public void findBetween() { results = service.findBetween(fromId, toId, sort); }
     public void addBetween() {
-        Integer id = service.addBetween(name, coordinateX, coordinateY, fromId, toId, distance, newRating);
-        info("Создан маршрут #" + id);
-        results = service.findBetween(fromId, toId, sort);
+        try {
+            Integer id = service.addBetween(name, coordinateX, coordinateY, fromId, toId, distance, newRating);
+            info("Создан маршрут #" + id);
+            results = service.findBetween(fromId, toId, sort);
+        } catch (RuntimeException exception) {
+            Throwable cause = exception;
+            while (cause.getCause() != null) cause = cause.getCause();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, cause.getMessage(), null));
+        }
     }
     private void info(String text) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, text, null));
