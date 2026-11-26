@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/app.xhtml">
+    <ui:define name="title">Импорт</ui:define>
+    <ui:define name="content">
+        <div class="page-heading">
+            <div><h1>Импорт маршрутов</h1><p>JSON-массив: до 1000 маршрутов, файл до 1 МиБ. При ошибке весь импорт отменяется.</p></div>
+        </div>
+        <h:form id="importForm" enctype="multipart/form-data">
+            <h:messages id="messages" infoClass="toast success" errorClass="toast error"/>
+            <label for="importForm:file">JSON-файл</label>
+            <h:inputFile id="file" value="#{importBean.file}"/>
+            <h:commandButton id="upload" value="Импортировать" action="#{importBean.upload}" styleClass="button primary"/>
+        </h:form>
+        <p>В каждой записи задайте name, coordinates (x, y), from (x, y, z), distance и rating.
+            Поле to необязательно. Названия вложенных локаций необязательны.
+            Локации создаются вместе с маршрутом. ID и дата создания назначаются сервером.</p>
+        <h:form id="historyForm">
+            <div class="page-heading"><h2>История импорта</h2>
+                <h:commandButton id="reload" value="Обновить" action="#{importBean.reload}" styleClass="button secondary"/>
+            </div>
+            <div class="table-frame">
+                <h:dataTable id="history" value="#{importBean.operations}" var="operation" styleClass="data-table" headerClass="table-header">
+                    <h:column><f:facet name="header">ID</f:facet>#{operation.id}</h:column>
+                    <h:column><f:facet name="header">Статус</f:facet>#{operation.status}</h:column>
+                    <h:column><f:facet name="header">Пользователь</f:facet>#{operation.owner}</h:column>
+                    <h:column><f:facet name="header">Начало</f:facet>#{operation.startedAt}</h:column>
+                    <h:column><f:facet name="header">Добавлено</f:facet>#{operation.addedCount}</h:column>
+                    <h:column><f:facet name="header">Ошибка</f:facet>#{operation.error}</h:column>
+                </h:dataTable>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
