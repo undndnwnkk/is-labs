@@ -4,6 +4,7 @@
         <jta-data-source>java:/jdbc/RouteDS</jta-data-source>
         <class>ru.itmo.routes.domain.Route</class>
         <class>ru.itmo.routes.domain.Location</class>
+        <class>ru.itmo.routes.domain.ImportOperation</class>
         <properties>
             <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
             <property name="hibernate.hbm2ddl.auto" value="none"/>
