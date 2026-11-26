@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +27,9 @@ public class Route implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Version
+    private long version;
 
     @NotBlank(message = "Название обязательно")
     @Column(nullable = false)
@@ -63,6 +67,7 @@ public class Route implements Serializable {
         if (creationDate == null) creationDate = LocalDateTime.now();
     }
 
+    public long getVersion() { return version; }
     public Integer getId() { return id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name == null ? null : name.trim(); }

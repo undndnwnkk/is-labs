@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class RouteDto implements Serializable {
+    private final long version;
     private final Integer id;
     private final String name;
     private final CoordinatesDto coordinates;
@@ -14,7 +15,8 @@ public class RouteDto implements Serializable {
     private final Integer rating;
 
     public RouteDto(Integer id, String name, CoordinatesDto coordinates, LocalDateTime creationDate,
-                    LocationDto from, LocationDto to, float distance, Integer rating) {
+                    LocationDto from, LocationDto to, float distance, Integer rating, long version) {
+        this.version = version;
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;
@@ -25,6 +27,7 @@ public class RouteDto implements Serializable {
         this.rating = rating;
     }
 
+    public long getVersion() { return version; }
     public Integer getId() { return id; }
     public String getName() { return name; }
     public CoordinatesDto getCoordinates() { return coordinates; }

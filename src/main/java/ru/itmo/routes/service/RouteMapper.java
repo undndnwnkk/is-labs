@@ -17,7 +17,7 @@ final class RouteMapper {
         Coordinates coordinates = route.getCoordinates();
         return new RouteDto(route.getId(), route.getName(),
                 new CoordinatesDto(coordinates.getX(), coordinates.getY()), route.getCreationDate(),
-                toDto(route.getFrom()), toDto(route.getTo()), route.getDistance(), route.getRating());
+                toDto(route.getFrom()), toDto(route.getTo()), route.getDistance(), route.getRating(), route.getVersion());
     }
 
     static LocationDto toDto(Location location) {
